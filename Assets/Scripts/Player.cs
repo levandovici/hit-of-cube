@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
 
         _color = target.GetRandomBlockColor();
 
-       _mesh_renderer.material.SetColor("_EmissionColor", Coloristic.GetColor(_color));
+       _mesh_renderer.material.color = Coloristic.GetColor(_color);
     }
 
     public void SetUp(int max_health)

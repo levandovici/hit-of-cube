@@ -268,7 +268,7 @@ public class GameController : MonoBehaviour
     private void MoveForward()
     {
         transform.position = Vector3.MoveTowards(transform.position,
-            transform.position + Vector3.forward, _move_speed * Time.deltaTime);
+            transform.position + Vector3.forward * _move_speed, _move_speed * Time.deltaTime);
     }
 
     private void ResetPosition()
@@ -350,16 +350,30 @@ public class GameController : MonoBehaviour
 
     private void ManageMovement()
     {
-        if (Input.GetKeyDown(KeyCode.A) && _player.Line != ELine.left)
+        bool left = false, right = false;
+
+        left = Input.GetMouseButtonDown(0) && Input.mousePosition.x / Screen.width * 2f - 1f < 0f;
+
+        right = Input.GetMouseButtonDown(0) && Input.mousePosition.x / Screen.width * 2f - 1f > 0f;
+
+
+#if UNITY_EDITOR
+        left = left || Input.GetKeyDown(KeyCode.A);
+
+        right = right || Input.GetKeyDown(KeyCode.D);
+#endif
+
+
+        if (left && _player.Line != ELine.left)
         {
             MoveLeft();
         }
-        else if (Input.GetKeyDown(KeyCode.D) && _player.Line != ELine.right)
+        else if (right && _player.Line != ELine.right)
         {
             MoveRight();
         }
 
-        _player.transform.position = Vector3.MoveTowards(_player.transform.position, 
+        _player.transform.position = Vector3.MoveTowards(_player.transform.position,
             new Vector3(_player.TargetXPosition, _player.transform.position.y,
             _player.transform.position.z), _move_speed * Time.deltaTime);
     }
@@ -398,10 +412,10 @@ public class GameController : MonoBehaviour
     {
         int min_blocks = 1;
 
-        if (_score >= 1024)
+        if (_score >= 4096)
             min_blocks++;
 
-        if (_score >= 2048)
+        if (_score >= 8192)
             min_blocks++;
 
         EBlocksLine blocksLine = GenerateBlocksLine(min_blocks);

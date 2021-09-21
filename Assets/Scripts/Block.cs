@@ -9,9 +9,19 @@ public class Block : MonoBehaviour
     [SerializeField]
     private EColor _color;
 
+    [SerializeField]
+    private MeshRenderer _mesh_renderer;
+
 
 
     public EColor Color => _color;
+
+
+
+    public void Awake()
+    {
+        _mesh_renderer = GetComponent<MeshRenderer>();
+    }
 
 
 
@@ -19,6 +29,6 @@ public class Block : MonoBehaviour
     {
         _color = color;
 
-        this.gameObject.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Coloristic.GetColor(_color));
+        _mesh_renderer.material.color = Coloristic.GetColor(_color);
     }
 }

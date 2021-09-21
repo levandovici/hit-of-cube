@@ -6,6 +6,9 @@ using System;
 public class BandsController : MonoBehaviour
 {
     [SerializeField]
+    private float _z_start_offset = 0f;
+
+    [SerializeField]
     private float _start_scale;
 
     [SerializeField]
@@ -131,7 +134,7 @@ public class BandsController : MonoBehaviour
                   Mathf.Lerp(_min_emission_color.a, _max_emission_color.a, c));
             }
 
-            _cubes[i].GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", color);
+            _cubes[i].GetComponent<MeshRenderer>().material.color = color;
         }
     }
 
@@ -142,7 +145,7 @@ public class BandsController : MonoBehaviour
         for (int i = 0; i < _cubes.Length; i++)
         {
             _cubes[i].transform.position = new Vector3(transform.position.x,
-                0f, z_position - z_position % _cubes_offset + i * _cubes_offset);
+                0f, _z_start_offset + z_position - z_position % _cubes_offset + i * _cubes_offset);
         }
     }
 }
