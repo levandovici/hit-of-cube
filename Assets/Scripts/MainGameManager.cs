@@ -19,6 +19,9 @@ public class MainGameManager : MonoBehaviour
     [SerializeField]
     SoundController _sound_controller;
 
+    [SerializeField]
+    private AdsManager _ads_manager;
+
 
 
     private void Awake()
@@ -73,11 +76,35 @@ public class MainGameManager : MonoBehaviour
         {
             SaveLoadManager.Save();
         };
+
+        _game_controller.OnShowAd += () =>
+        {
+            _ads_manager.ShowAd(AdsManager.EReward.continue_game);
+        };
+
+
+        _ads_manager.OnCanShowAdChanged += (b) =>
+        {
+            _game_controller.SetUp(b);
+        };
+
+        _ads_manager.OnReward += (reward) =>
+        {
+            if (reward == AdsManager.EReward.continue_game)
+            {
+                _game_controller.ContinueGame();
+            }
+        };
+
+
+        _ads_manager.IsAdsEnabled = true;
+
+        _ads_manager.InitializeAds();
     }
 
     private void Start()
     {
-        _game_controller.SetUp(SaveLoadManager.PlayerData.best_score); 
+        _game_controller.SetUp(SaveLoadManager.PlayerData.best_score);
     }
 
     private void OnApplicationPause(bool pause)

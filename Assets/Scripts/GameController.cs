@@ -90,9 +90,6 @@ public class GameController : MonoBehaviour
     private bool _auto = false;
 
     [SerializeField]
-    private Animator _tab_animator;
-
-    [SerializeField]
     private GameObject _play_tab;
 
     [SerializeField]
@@ -111,6 +108,9 @@ public class GameController : MonoBehaviour
     private Text _game_over_tab_gems;
 
 
+    private Vector3 _start_mouse_position = Vector3.zero;
+
+
 
     public event Action OnCollectGem;
 
@@ -126,6 +126,7 @@ public class GameController : MonoBehaviour
 
     public event Action OnGameOver;
 
+    public event Action OnShowAd;
 
 
 
@@ -143,22 +144,11 @@ public class GameController : MonoBehaviour
 
             _game_over_tab.gameObject.SetActive(true);
 
-            _tab_animator.SetTrigger("Start");
-
             _game_over_tab_best_score.text = $"Best score: {_best_score}";
 
             _game_over_tab_score.text = $"Score: {_score}";
 
             _game_over_tab_gems.text = $"Gems: {_gems}";
-
-            if(_new_record)
-            {
-                StartCoroutine(IActionActivator(() =>
-                {
-                    _tab_animator.SetTrigger("NewRecord");
-
-                }, 1f));
-            }
         };
 
         _player.OnTriggerBlock += (block) =>
@@ -193,18 +183,7 @@ public class GameController : MonoBehaviour
 
         _player.OnDie += () => OnGameOver.Invoke();
 
-        _continue_for_ad.onClick.AddListener(() =>
-        {
-            _game_over = false;
-
-            _player.SetUp(100);
-
-            _tab_animator.SetTrigger("Exit");
-
-            _play_tab.gameObject.SetActive(true);
-
-            _game_over_tab.gameObject.SetActive(false);
-        });
+        _continue_for_ad.onClick.AddListener(() => OnShowAd.Invoke());
     }
 
     private void Start()
@@ -219,8 +198,6 @@ public class GameController : MonoBehaviour
 
         FindPlayerTarget();
     }
-
-
 
     private void Update()
     {
@@ -258,12 +235,25 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private IEnumerator IActionActivator(Action action, float after_time)
-    {
-        yield return new WaitForSeconds(after_time);
 
-        action.Invoke();
+
+    public void ContinueGame()
+    {
+        _game_over = false;
+
+        _player.SetUp(100);
+
+        _play_tab.gameObject.SetActive(true);
+
+        _game_over_tab.gameObject.SetActive(false);
     }
+
+    public void SetUp(bool can_show_ad)
+    {
+        _continue_for_ad.gameObject.SetActive(can_show_ad);
+    }
+
+
 
     private void MoveForward()
     {
@@ -352,9 +342,24 @@ public class GameController : MonoBehaviour
     {
         bool left = false, right = false;
 
-        left = Input.GetMouseButtonDown(0) && Input.mousePosition.x / Screen.width * 2f - 1f < 0f;
 
-        right = Input.GetMouseButtonDown(0) && Input.mousePosition.x / Screen.width * 2f - 1f > 0f;
+        if (Input.GetMouseButtonDown(0))
+        {
+            _start_mouse_position = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            float swipe = Input.mousePosition.x - _start_mouse_position.x;
+
+            if (swipe < 0f)
+            {
+                left = true;
+            }
+            else if (swipe > 0f)
+            {
+                right = true;
+            }
+        }
 
 
 #if UNITY_EDITOR
