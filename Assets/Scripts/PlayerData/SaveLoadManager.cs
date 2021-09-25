@@ -7,9 +7,7 @@ using System;
 
 public static class SaveLoadManager
 {
-    private const string PlayerDataPath = "player.data";
-
-    private static ISaveLoadController _save_load_controller = new SimpleSaveLoadController();
+    private const string PlayerDataPath = "hit-of-cube.data";
 
     private static PlayerData _player_data = null;
 
@@ -32,12 +30,14 @@ public static class SaveLoadManager
     {
         get
         {
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+
+            return Path.Combine(Application.dataPath, PlayerDataPath);
+
+#else
 
             return Path.Combine(Application.persistentDataPath, PlayerDataPath);
 
-#else
-            return Path.Combine(Application.dataPath, PlayerDataPath);
 #endif
         }
     }
@@ -46,11 +46,42 @@ public static class SaveLoadManager
 
     public static void Save()
     {
-        _save_load_controller.Save(PlayerData, GetPath);
+        File.WriteAllText(GetPath, Encript(PlayerData));
+    }
+
+    public async static void SaveAsync()
+    {
+        using (StreamWriter writer = File.CreateText(GetPath))
+        {
+            await writer.WriteAsync(Encript(PlayerData));
+        }
     }
 
     public static void Load()
     {
-        _player_data = _save_load_controller.Load(GetPath);
+        if (File.Exists(GetPath))
+        {
+            _player_data = Decript(File.ReadAllText(GetPath));
+        }
+        else
+        {
+            _player_data = new PlayerData();
+        }
+    }
+
+
+
+    private static string Encript(PlayerData data)
+    {
+        SaveData saveData = new SaveData(data);
+
+        return JsonUtility.ToJson(saveData);
+    }
+
+    private static PlayerData Decript(string data)
+    {
+        SaveData saveData = JsonUtility.FromJson<SaveData>(data);
+
+        return saveData.PlayerData();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 using static BlocksLine;
 
@@ -108,6 +109,10 @@ public class GameController : MonoBehaviour
     private Text _game_over_tab_gems;
 
 
+    [SerializeField]
+    private Button _main_menu;
+
+
     private Vector3 _start_mouse_position = Vector3.zero;
 
 
@@ -127,6 +132,8 @@ public class GameController : MonoBehaviour
     public event Action OnGameOver;
 
     public event Action OnShowAd;
+
+    public event Action OnClick;
 
 
 
@@ -173,7 +180,7 @@ public class GameController : MonoBehaviour
             {
                 OnEnterWrongBlock.Invoke();
 
-                _player.DealDamage(15);
+                _player.DealDamage(UnityEngine.Random.Range(32, 34));
 
                 _player.SetUp(Player.EAnimation.bump);
             }
@@ -183,7 +190,19 @@ public class GameController : MonoBehaviour
 
         _player.OnDie += () => OnGameOver.Invoke();
 
-        _continue_for_ad.onClick.AddListener(() => OnShowAd.Invoke());
+        _continue_for_ad.onClick.AddListener(() =>
+        {
+            OnClick.Invoke();
+
+            OnShowAd.Invoke();
+        });
+
+        _main_menu.onClick.AddListener(() =>
+        {
+            OnClick.Invoke();
+
+            SceneManager.LoadScene(0);
+        });
     }
 
     private void Start()

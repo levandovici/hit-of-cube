@@ -82,6 +82,11 @@ public class MainGameManager : MonoBehaviour
             _ads_manager.ShowAd(AdsManager.EReward.continue_game);
         };
 
+        _game_controller.OnClick += () =>
+        {
+            _sound_controller.PlaySfx(SoundController.ESfx.click);
+        };
+
 
         _ads_manager.OnCanShowAdChanged += (b) =>
         {

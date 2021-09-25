@@ -776,6 +776,7 @@ MonoBehaviour:
   _correct_block: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
   _wrong_block: {fileID: 8300000, guid: a5e03bdf68a774d7bbdd11fe48caaf4c, type: 3}
   _new_record: {fileID: 8300000, guid: 7478151cf36724a7dada558f746c3633, type: 3}
+  _click: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
 --- !u!1 &474179260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,6 +1811,7 @@ MonoBehaviour:
   _game_over_tab_best_score: {fileID: 2120079285}
   _game_over_tab_score: {fileID: 690927823}
   _game_over_tab_gems: {fileID: 608621829}
+  _main_menu: {fileID: 500019244}
 --- !u!114 &963194231
 MonoBehaviour:
   m_ObjectHideFlags: 0

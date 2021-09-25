@@ -28,6 +28,9 @@ public class SoundController : MonoBehaviour
     [SerializeField]
     private AudioClip _new_record;
 
+    [SerializeField]
+    private AudioClip _click;
+
 
 
     public void SetUp(float music_volume, float sfx_volume)
@@ -79,11 +82,17 @@ public class SoundController : MonoBehaviour
                 _sfx.PlayOneShot(_new_record);
 
                 break;
+
+            case ESfx.click:
+
+                _sfx.PlayOneShot(_click);
+
+                break;
         }
     }
 
     public enum ESfx
     {
-        collect_gem, change_line, correct_block, wrong_block, new_record,
+        collect_gem, change_line, correct_block, wrong_block, new_record, click,
     }
 }
