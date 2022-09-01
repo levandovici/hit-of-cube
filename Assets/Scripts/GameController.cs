@@ -29,6 +29,9 @@ public class GameController : MonoBehaviour
     private float _move_speed;
 
     [SerializeField]
+    private float _move_left_and_right = 2f;
+
+    [SerializeField]
     private float _increase_after_distance;
 
     [SerializeField]
@@ -97,9 +100,6 @@ public class GameController : MonoBehaviour
     private GameObject _game_over_tab;
 
     [SerializeField]
-    private Button _continue_for_ad;
-
-    [SerializeField]
     private Text _game_over_tab_best_score;
 
     [SerializeField]
@@ -130,8 +130,6 @@ public class GameController : MonoBehaviour
     public event Action<float> OnZPositionChanged;
 
     public event Action OnGameOver;
-
-    public event Action OnShowAd;
 
     public event Action OnClick;
 
@@ -189,13 +187,6 @@ public class GameController : MonoBehaviour
         };
 
         _player.OnDie += () => OnGameOver.Invoke();
-
-        _continue_for_ad.onClick.AddListener(() =>
-        {
-            OnClick.Invoke();
-
-            OnShowAd.Invoke();
-        });
 
         _main_menu.onClick.AddListener(() =>
         {
@@ -265,11 +256,6 @@ public class GameController : MonoBehaviour
         _play_tab.gameObject.SetActive(true);
 
         _game_over_tab.gameObject.SetActive(false);
-    }
-
-    public void SetUp(bool can_show_ad)
-    {
-        _continue_for_ad.gameObject.SetActive(can_show_ad);
     }
 
 
@@ -399,7 +385,7 @@ public class GameController : MonoBehaviour
 
         _player.transform.position = Vector3.MoveTowards(_player.transform.position,
             new Vector3(_player.TargetXPosition, _player.transform.position.y,
-            _player.transform.position.z), _move_speed * Time.deltaTime);
+            _player.transform.position.z), _move_speed * _move_left_and_right * Time.deltaTime);
     }
 
     private void MoveLeft()
@@ -632,6 +618,27 @@ public class BlocksLine
 
 
     public float ZPosition => _z_position;
+
+    public int Count
+    {
+        get
+        {
+            int count = 0;
+
+
+            if (left != null)
+                count++;
+
+            if (middle != null)
+                count++;
+
+            if (right != null)
+                count++;
+
+
+            return count;
+        }
+    }
 
 
 

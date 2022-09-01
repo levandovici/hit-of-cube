@@ -66,6 +66,16 @@ public class Player : MonoBehaviour
 
         _color = target.GetRandomBlockColor();
 
+        if(target.Count < 3)
+        {
+            int r = UnityEngine.Random.Range(0, 4);
+
+            if(r < 3)
+            {
+                _color = GetRandomColor();
+            }
+        }
+
        _mesh_renderer.material.color = Coloristic.GetColor(_color);
     }
 
