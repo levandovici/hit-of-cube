@@ -38,7 +38,7 @@ public class MainMenuManager : MonoBehaviour
         {
             _sound_controller.PlaySfx(SoundController.ESfx.click);
 
-            Application.OpenURL("https://unity.com/legal/privacy-policy");
+            Application.OpenURL("https://limonado-entertainment.jimdosite.com/privacy.policy/");
         });
     }
 
