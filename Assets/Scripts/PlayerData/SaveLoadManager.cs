@@ -7,7 +7,7 @@ using System;
 
 public static class SaveLoadManager
 {
-    private const string PlayerDataPath = "hit-of-cube.data";
+    private const string PlayerDataPath = "data";
 
     private static PlayerData _player_data = null;
 
@@ -26,42 +26,18 @@ public static class SaveLoadManager
         }
     }
 
-    private static string GetPath
-    {
-        get
-        {
-#if UNITY_EDITOR
-
-            return Path.Combine(Application.dataPath, PlayerDataPath);
-
-#else
-
-            return Path.Combine(Application.persistentDataPath, PlayerDataPath);
-
-#endif
-        }
-    }
-
 
 
     public static void Save()
     {
-        File.WriteAllText(GetPath, Encript(PlayerData));
-    }
-
-    public async static void SaveAsync()
-    {
-        using (StreamWriter writer = File.CreateText(GetPath))
-        {
-            await writer.WriteAsync(Encript(PlayerData));
-        }
+        PlayerPrefs.SetString(PlayerDataPath, Encript(PlayerData));
     }
 
     public static void Load()
     {
-        if (File.Exists(GetPath))
+        if (PlayerPrefs.HasKey(PlayerDataPath))
         {
-            _player_data = Decript(File.ReadAllText(GetPath));
+            _player_data = Decript(PlayerPrefs.GetString(PlayerDataPath));
         }
         else
         {

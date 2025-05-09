@@ -21,6 +21,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private SoundController _sound_controller;
 
+    [SerializeField]
+    private SwipeBlocks _swipe_blocks;
+
 
 
     private void Awake()
@@ -31,14 +34,14 @@ public class MainMenuManager : MonoBehaviour
         {
             _sound_controller.PlaySfx(SoundController.ESfx.click);
 
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(_swipe_blocks.Selected + 1);
         });
 
         _privacy_policy.onClick.AddListener(() =>
         {
             _sound_controller.PlaySfx(SoundController.ESfx.click);
 
-            Application.OpenURL("https://limonado-entertainment.jimdosite.com/privacy.policy/");
+            Application.OpenURL("https://games.limonadoent.com/privacy-policy.html");
         });
     }
 
@@ -54,13 +57,13 @@ public class MainMenuManager : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         if(pause)
-        SaveLoadManager.SaveAsync();
+        SaveLoadManager.Save();
     }
 
     private void OnApplicationFocus(bool focus)
     {
         if(!focus)
-        SaveLoadManager.SaveAsync();
+        SaveLoadManager.Save();
     }
 
     private void OnApplicationQuit()
